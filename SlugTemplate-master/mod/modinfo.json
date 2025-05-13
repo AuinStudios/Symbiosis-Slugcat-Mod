@@ -1,0 +1,10 @@
+﻿{
+	"id": "IncoDev.Symbiosis",
+	"name": "Symbiosis",
+	"version": "0.1.0",
+	"authors": "IncoDev",
+	"description": "we are scug",
+	"requirements": [ "slime-cubed.slugbase", "fisobs" ],
+	"requirements_names": [ "SlugBase", "Fisobs" ],
+	"tags": [ "Custom Slugcat" ]
+}

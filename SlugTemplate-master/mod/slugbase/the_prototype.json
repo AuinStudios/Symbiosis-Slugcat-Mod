@@ -1,0 +1,10 @@
+{
+	"id": "Symbiosis",
+	"name": "The slugcat?",
+	"description": "Symbiosis",
+	"features": {
+		"color": "9cf0a4",
+		"select_menu_scene": "Slugcat_Prototype",
+		"select_menu_scene_ascended": "Ghost_Prototype"
+	}
+}
