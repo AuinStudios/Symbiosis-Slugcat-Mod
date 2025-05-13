@@ -3,6 +3,7 @@ using BepInEx;
 using UnityEngine;
 using SlugBase.Features;
 using static SlugBase.Features.FeatureTypes;
+using Fisobs.Core;
 
 namespace Symbiosis
 {
@@ -22,6 +23,7 @@ namespace Symbiosis
             On.RainWorld.OnModsInit += Extras.WrapInit(LoadResources);
 
             // Put your custom hooks here!
+            // hello
             #region base code
             // On.Player.Jump += Player_Jump;
             // On.Player.Die += Player_Die;
@@ -32,6 +34,7 @@ namespace Symbiosis
         // Load any resources, such as sprites or sounds
         private void LoadResources(RainWorld rainWorld)
         {
+            Content.Register(new ParasiteFisObs());
         }
 
         #region base code
