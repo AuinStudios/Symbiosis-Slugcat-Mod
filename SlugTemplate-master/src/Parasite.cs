@@ -5,6 +5,8 @@ namespace Symbiosis
 {
     public class Parasite : PlayerCarryableItem
     {
+        public int Interpolate { get; private set; } = 0;
+        public Creature creaturemodule { get; private set; }
         public Parasite(ParasiteAbstract abstractPhysicalObject) : base(abstractPhysicalObject)
         {
             float mass = 0.2f;
@@ -59,6 +61,31 @@ namespace Symbiosis
         public override void Update(bool eu)
         {
             base.Update(eu);
+
+            //  if (grabbedBy[0].grabber != null && grabbedBy[0].grabber is Creature c && c is not Player)
+            //  {
+            //      Interpolate++;
+            //      creaturemodule = c;
+            //  }
+            if (grabbedBy.Count > 0 && grabbedBy[0].grabber is Player p)
+            {
+                if (p.input[0].pckp)
+                {
+                    Interpolate++;
+                }
+                else
+                {
+                    Interpolate--;
+                }
+                creaturemodule = p;
+            }
+            else if(Interpolate > 0 && grabbedBy.Count == 0)
+            {
+                Interpolate--;
+                creaturemodule = null;
+            }
+
+            Interpolate = Mathf.Clamp(Interpolate , 0 , 20);
         }
 
 
