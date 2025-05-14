@@ -1,12 +1,11 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
-
+using RWCustom;
 namespace Symbiosis
 {
     public class Parasite : PlayerCarryableItem
     {
-        public RWCustom.IntVector2? vec;
-        public Parasite(AbstractPhysicalObject abstractPhysicalObject) : base(abstractPhysicalObject)
+        public Parasite(ParasiteAbstract abstractPhysicalObject) : base(abstractPhysicalObject)
         {
             float mass = 0.2f;
             var positions = new List<Vector2>();
@@ -50,23 +49,34 @@ namespace Symbiosis
 
         public override void InitiateGraphicsModule()
         {
-            graphicsModule = new ParasiteGraphics(this, false);
+            if(graphicsModule == null)
+            {
+                graphicsModule = new ParasiteGraphics(this, false);
+            }
+           
         }
 
         public override void Update(bool eu)
         {
             base.Update(eu);
+        }
 
 
-            RWCustom.IntVector2? temp = SharedPhysics.RayTraceTilesForTerrainReturnFirstSolid(this.room, room.GetTilePosition(firstChunk.pos), room.GetTilePosition(firstChunk.pos + (Vector2.down * 0.5f)));
+        public override void PlaceInRoom(Room placeRoom)
+        {
+            base.PlaceInRoom(placeRoom);
 
-            if (temp.HasValue)
+            Vector2 center = placeRoom.MiddleOfTile(abstractPhysicalObject.pos);
+            bodyChunks[0].HardSetPosition(new Vector2(0, 0) * 20f + center);
+        }
+
+        public override void TerrainImpact(int chunk,   IntVector2 direction, float speed, bool firstContact)
+        {
+            base.TerrainImpact(chunk, direction, speed, firstContact);
+
+            if (speed > 10)
             {
-                vec = temp;
-            }
-            else
-            {
-                vec = room.GetTilePosition( firstChunk.pos);
+                room.PlaySound(SoundID.Spear_Fragment_Bounce, bodyChunks[chunk].pos, 0.35f, 2f);
             }
         }
     }

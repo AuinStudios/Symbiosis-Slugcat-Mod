@@ -1,11 +1,6 @@
 ﻿using Fisobs.Core;
 using Fisobs.Properties;
 using Fisobs.Sandbox;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Symbiosis
 {
@@ -20,10 +15,16 @@ namespace Symbiosis
         public ParasiteFisObs() : base(Parasite)
         {
             //  Icon = new SimpleIcon("Pebble", new Color(1f, 0.2f, 0.2f));
-            Icon = new DefaultIcon();
-            RegisterUnlock(BlackParasite);//, MultiplayerUnlocks.SandboxUnlockID.Lantern, data: 0);
+            Icon = new ParasiteIcon();
+          
 
             SandboxPerformanceCost = new(linear: 0.35f, exponential: 0f);
+
+
+
+            RegisterUnlock(BlackParasite);//, MultiplayerUnlocks.SandboxUnlockID.Lantern, data: 0);
+
+            
 
           
         }
@@ -61,6 +62,10 @@ namespace Symbiosis
             return result;
         }
 
+        public override void LoadResources(RainWorld rainWorld)
+        {
+            base.LoadResources(rainWorld);
+        }
         private static readonly ParasitePropertys properties = new();
 
         public override ItemProperties Properties(PhysicalObject forObject)

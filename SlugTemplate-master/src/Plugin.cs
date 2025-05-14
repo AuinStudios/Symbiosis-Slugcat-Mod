@@ -12,6 +12,7 @@ namespace Symbiosis
     {
         private const string MOD_ID = "IncoDev.Symbiosis";
 
+        public static readonly PlayerFeature<bool> canspawnsymbiote = PlayerBool("Symbiosis/SpawnSymbiote");
       //  public static readonly PlayerFeature<float> SuperJump = PlayerFloat("slugtemplate/super_jump");
       //  public static readonly PlayerFeature<bool> ExplodeOnDeath = PlayerBool("slugtemplate/explode_on_death");
       //  public static readonly GameFeature<float> MeanLizards = GameFloat("slugtemplate/mean_lizards");
@@ -21,7 +22,7 @@ namespace Symbiosis
         public void OnEnable()
         {
             On.RainWorld.OnModsInit += Extras.WrapInit(LoadResources);
-
+            On.Player.Update += Player_Update;
             // Put your custom hooks here!
             // hello
             #region base code
@@ -31,12 +32,43 @@ namespace Symbiosis
             #endregion
         }
 
+        private void Player_Update(On.Player.orig_Update orig, Player self, bool eu)
+        {
+            orig(self ,eu);
+
+            if(canspawnsymbiote.TryGet(self , out bool value))
+            {
+                if (CWTS.TryGetCWT(self, out CWTS.Data data) && !data.spawnonce)
+                {
+
+                    if( self.input[0].spec && !self.input[1].spec)
+                    {
+                        SpawnSymbiote(self);
+                        data.spawnonce = true;
+                    }
+                }
+                
+            }
+        }
+
         // Load any resources, such as sprites or sounds
         private void LoadResources(RainWorld rainWorld)
         {
             Content.Register(new ParasiteFisObs());
         }
 
+
+        private void SpawnSymbiote(Player self)
+        {
+            var tilePos = self.room.GetTilePosition(self.mainBodyChunk.pos);
+
+            var pos = new WorldCoordinate(self.room.abstractRoom.index, tilePos.x, tilePos.y, 0);
+
+            var abstr = new ParasiteAbstract(self.room.world, pos, self.room.game.GetNewID());
+            
+            self.room.abstractRoom.AddEntity(abstr);
+            abstr.RealizeInRoom();
+        }
         #region base code
         // Implement MeanLizards
        // private void Lizard_ctor(On.Lizard.orig_ctor orig, Lizard self, AbstractCreature abstractCreature, World world)

@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 
 namespace Symbiosis
@@ -10,7 +7,7 @@ namespace Symbiosis
     public class ParasiteGraphics : GraphicsModule
     {
         private  readonly int Segments = 8;
-        private List<Vector2> blobVerts;
+        private List<Vector2> blobVerts = new List<Vector2>();
         private readonly float Radius = 4.5f;
         private TriangleMesh BlobMesh;
 
@@ -56,7 +53,7 @@ namespace Symbiosis
             {
                 // sLeaser.sprites[i].color = palette.blackColor;
 
-                sLeaser.sprites[i].color = Color.Lerp(baseColor, Color.black, 0.5f);
+                sLeaser.sprites[i].color = Color.Lerp(baseColor, Color.black, 0.9f);
             }
         }
 
@@ -66,30 +63,11 @@ namespace Symbiosis
             Vector2 drawPos = Vector2.Lerp(owner.firstChunk.lastPos, owner.firstChunk.pos, timeStacker) - camPos;
             sLeaser.sprites[0].SetPosition(drawPos);
 
-            if (Own.vec.Value != owner.room.GetTilePosition( owner.firstChunk.pos))
+             
+
+            if (owner.slatedForDeletetion || owner.room != rCam.room)
             {
-                for (int i = 0; i < blobVerts.Count; i++)
-                {
-                    RWCustom.IntVector2 p = owner.room.GetTilePosition(blobVerts[i]);
-                    if (Own.vec.Value.y < p.y)
-                    {
-                        RWCustom.IntVector2 newblobvert = p;
-
-                        newblobvert.y = 0;
-
-                        newblobvert.y = Own.vec.Value.y;
-
-                        BlobMesh.MoveVertice(i, newblobvert.ToVector2());
-                    }
-                    
-                }
-            }
-            else
-            {
-                for (int i = 0; i < blobVerts.Count; i++)
-                {
-                    BlobMesh.MoveVertice(i, blobVerts[i]);
-                }
+                sLeaser.CleanSpritesAndRemove();
             }
         }
 
